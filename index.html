@@ -1,0 +1,202 @@
+<html lang="en"><head>
+        <meta charset="utf-8">
+        <title>Test</title>
+		  <script src="jquery-1.12.0.min.js"></script>
+		          <script src="snap.svg.js"></script>
+<style>
+
+	   body {
+	         overflow: hidden;
+			     margin: 0;
+	   }
+	    svg{
+        height: 100%;
+        width: 100%;
+		    position: absolute;
+    }
+	canvas {
+	position:absolute;
+	z-index:10;
+	 
+	
+	}
+	#score {
+	    position: absolute;
+    right: 4%;
+    top: 10px;
+    font-size: 23px;
+    color: #A22558;
+	}
+</style>
+    </head>
+    <body>
+	
+         <svg class="smallCircle"></svg> 
+         <canvas id="canvas"></canvas>
+		 </div>
+	 <script>
+	    $(document).ready(function() {
+		  var width = $(window).width();
+		  var height = $(window).height();
+		  var c = Snap(".smallCircle");
+		  c.rect(0, 0, width, height);
+		  var ball = [];
+		  c.attr({
+		   fill: "#ccc"
+		  });
+		  gun = c.rect(width / 2, height - 45, 40, 40);
+		  gun.attr({
+		   fill: "#DA1414"
+		  })
+		  for (var i = 0; i < 2; i++) {
+		   circ = c.circle(0, 0, 40);
+		   circ.data('cy', height);
+		   circ.data('cx', 0);
+		   circ.attr({
+			fill: "#1E948D",
+		   });
+		   ball.push(circ);
+		  }
+
+		  function draw() {
+		   for (var i = 0, l = ball.length; i < 2; i++) {
+
+			var circ = ball[i];
+			if (circ.data('cy') < 0) {
+			 circ.data('cy', height);
+
+			} else {
+			 circ.data('cy', (circ.data('cy') - 2));
+			}
+			if (circ.data('cx') < width) {
+			 circ.data('cx', (circ.data('cx') + 1));
+			} else {
+			 circ.data('cx', 1);
+			}
+			circ.attr({
+			 cy: circ.data('cy'),
+			 cx: circ.data('cx')
+			});
+			this.cy = ball[i].data('cy');
+			this.cx = ball[i].data('cx');
+
+		   }
+		   circ.attr({
+			fill: "#1E948D",
+		   });
+		  }
+
+
+		  function animate() {
+		   //draws;
+		   var draws = new draw();
+		   xpos = draws.cx;
+		   ypos = draws.cy;
+		   window.requestAnimationFrame(animate);
+		  }
+		  animate();
+
+		  /*canvas*/
+		  var c = document.getElementById("canvas");
+		  ctx = c.getContext("2d");
+		  canvas.width = window.innerWidth;
+		  canvas.height = window.innerHeight;
+		  var x = canvas.width / 2;
+		  var y = canvas.height;
+		  var circle = [];
+		  var z = 0;
+		  ctx.beginPath();
+		  ctx.rect(20, 20, 150, 100);
+		  ctx.stroke();
+		  ctx.fillStyle = "#000";
+		  ctx.closePath();
+
+		  function createCircle(x, y) {
+		   this.x = x;
+		   this.y = y;
+		   this.move = function() {
+			y = y - 10;
+			// ctx.clearRect(0,0,canvas.width,canvas.height);
+			ctx.beginPath();
+			ctx.arc(x, y, 20, 0, Math.PI * 2);
+
+			ctx.fill();
+			ctx.fillStyle = "#DA1414";
+			ctx.closePath();
+			ciry = y;
+			cirx = x;
+			if (y < 10) {
+
+			 ctx.clearRect(0, 0, canvas.width, canvas.height);
+			}
+		   }
+		  }
+		  var points = 0;
+		  var div = document.createElement("div");
+		  document.getElementsByTagName('body')[0].appendChild(div);
+		  div.setAttribute("id", "score");
+		  var span = document.createElement("span");
+		  div.innerHTML = "You score is &nbsp;";
+		  div.appendChild(span);
+
+		  function moveCircle() {
+		   ctx.clearRect(0, 0, canvas.width, canvas.height);
+		   for (var z = 0; z < circle.length; z++) {
+			circle[z].move();
+		   }
+		   if ((ypos - 6 <= ciry && ciry <= ypos + 6) && (xpos - 70 <= cirx && cirx <= xpos + 70)) {
+
+
+			circ.data('cx', -100);
+			circ.data('cy', -100);
+			points++;
+			var pnt = span.innerHTML = points;
+
+			if (pnt == 5) {
+
+			}
+		   }
+
+		  }
+
+		  function makeCircle() {
+		   circle.push(new createCircle(x, y));
+		  }
+		  $("body").keydown(function(e) {
+		   var gunPosition = gun.attr("x");
+		   if (e.which == 37) { // left
+			x = x - 100;
+			if (e.which == 32) {
+			 makeCircle();
+			}
+			gun.data('cx', gunPosition - 100);
+			gun.attr({
+			 x: gun.data('cx')
+			})
+		   } else if (e.which == 39) { // right
+			x = x + 100;
+			if (e.which == 32) {
+			 makeCircle();
+			}
+			gun.data('cx', parseInt(gunPosition) + 100);
+			gun.attr({
+			 x: gun.data('cx')
+			})
+		   } else if (e.which == 32) {
+
+			makeCircle();
+		   }
+
+		  });
+
+		  function start() {
+		   makeCircle();
+		   window.setInterval(moveCircle, 10);
+		  }
+		  start();
+
+        });
+        </script>
+
+
+</body></html>
